@@ -26,6 +26,11 @@ app.MapGet("phrases", async () =>
 );
 
 
+app.MapGet("/tasks", async (ApiDbContext db) =>
+{
+    return await db.Tasks.ToListAsync();
+});
+
 
 app.Run();
 
