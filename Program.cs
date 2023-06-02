@@ -61,6 +61,17 @@ app.MapPut("/tasks/{id}", async(int id, Task inpTask, ApiDbContext db) =>
     return Results.Ok(task);
 });
 
+app.MapDelete("/tasks/{id}", async (int id, ApiDbContext db) =>
+{
+    if (await db.Tasks.FindAsync(id) is Task task)
+    {
+        db.Tasks.Remove(task);
+        await db.SaveChangesAsync();
+        return Results.Ok(task);
+    }
+    return Results.NotFound();
+});
+
 app.Run();
 
 class Task
