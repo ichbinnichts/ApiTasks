@@ -37,6 +37,11 @@ app.MapGet("/tasks/{id}", async(int id, ApiDbContext db) =>
     return await db.Tasks.FindAsync(id) is Task task ? Results.Ok(task) : Results.NotFound();
 });
 
+app.MapGet("/tasks/completed", async (ApiDbContext db) =>
+{
+    return await db.Tasks.Where(t => t.IsCompleted == true).ToListAsync();
+});
+
 app.MapPost("/tasks", async (Task task, ApiDbContext db) =>
 {
     db.Tasks.Add(task);
