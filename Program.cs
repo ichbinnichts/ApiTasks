@@ -49,6 +49,18 @@ app.MapPost("/tasks", async (Task task, ApiDbContext db) =>
     return Results.Created($"/tasks/{task.Id}", task);
 });
 
+app.MapPut("/tasks/{id}", async(int id, Task inpTask, ApiDbContext db) =>
+{
+    var task = await db.Tasks.FindAsync(id);
+    if(task == null) return Results.NotFound();
+    task.Name = inpTask.Name;
+    task.IsCompleted = inpTask.IsCompleted;
+
+    await db.SaveChangesAsync();
+
+    return Results.Ok(task);
+});
+
 app.Run();
 
 class Task
