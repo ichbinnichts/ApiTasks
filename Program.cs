@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,12 +26,17 @@ app.MapGet("phrases", async () =>
     await new HttpClient().GetStringAsync("https://ron-swanson-quotes.herokuapp.com/v2/quotes")
 );
 
-
 app.MapGet("/tasks", async (ApiDbContext db) =>
 {
     return await db.Tasks.ToListAsync();
 });
 
+app.MapPost("/tasks", async (Task task, ApiDbContext db) =>
+{
+    db.Tasks.Add(task);
+    await db.SaveChangesAsync();
+    return Results.Created($"/tasks/{task.Id}", task);
+});
 
 app.Run();
 
